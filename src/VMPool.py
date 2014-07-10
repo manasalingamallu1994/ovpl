@@ -90,6 +90,7 @@ class VMPool:
                 vm_id = result.json()["vm_id"]
                 vm_ip = result.json()["vm_ip"]
                 vmm_port = result.json()["vmm_port"]
+		# Create a VMProxy object, populate it and store in the list of VMPool
                 return construct_state()
             else:
                 raise Exception("VMPool: create_vm(): Error creating VM: " + result.text)
