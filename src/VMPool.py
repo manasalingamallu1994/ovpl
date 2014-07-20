@@ -33,6 +33,8 @@ class VMPool:
 
         self.system = State.Instance()
         #self.vms = []       # List of VMProxy objects
+        vmproxy=VMProxy.VMProxy()        
+        self.vms = vmproxy.get_VMProxy_list()
         self.vmpool_id = vmpool_id
         self.vm_description = vm_description
         self.adapter_ip = adapter_ip

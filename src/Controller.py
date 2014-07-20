@@ -28,18 +28,16 @@ class Controller:
             if lab_spec['lab']['runtime_requirements']['hosting'] == 'dedicated':
                """ TODO: Undeploy , fnd proper place to invoke undeploy""" 
                self.undeploy_lab(lab_id)
-            vmpoolmgr = VMPoolManager.VMPoolManager()
-            Logging.LOGGER.debug("Controller: test_lab(); invoking create_vm() on vmpoolmgr")
-            lab_state = vmpoolmgr.create_vm(lab_spec)
-            Logging.LOGGER.debug("Controller: test_lab(): Returned from VMPool = %s" % (str(lab_state)))
-            ip = lab_state['vm_info']['vm_ip']
-            port = lab_state['vm_info']['vmm_port']
+            payload = {'lab_spec': json.dumps(lab_spec)}
+            result = requests.post(url="http://127.0.0.1:8111/", data=payload)
+            ip = result.json()['vm_info']['vm_ip']
+            port = result.json()['vm_info']['vmm_port']
             vmmgrurl = "http://" + ip
             Logging.LOGGER.debug("Controller: test_lab(): vmmgrurl = %s" % (vmmgrurl))
             try:
                 (ret_val, ret_str) = LabManager.test_lab(vmmgrurl, port, lab_src_url, revision_tag)
                 if(ret_val):
-                    self.update_state(lab_state)
+                    self.update_state(result.json())
                     Logging.LOGGER.info("Controller: test_lab(): test succcessful")
                     return ip
                 else:
